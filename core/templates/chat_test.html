@@ -75,15 +75,16 @@
         const chatSocket = new WebSocket(
             // 'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
             // `ws://${window.location.host}/ws/chat/${roomName}/`);
-            `ws://${window.location.host}/ws/chat/{{room_name}}/`);
+            `ws://${window.location.host}/ws/chat/{{room_name}}/?token={{token}}`);
 
 
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const message = data.message;
+            const username = data.username;
 
             const messageElement = document.createElement("li");
-            messageElement.textContent = message;
+            messageElement.textContent = `${username}:${message}`;
             document.querySelector("#messages").appendChild(messageElement);
         };
 
@@ -96,7 +97,8 @@
             const message = messageInput.value;
 
             chatSocket.send(JSON.stringify({
-                'message': message
+                'message': message,
+                // 'username': username
             }));
 
             messageInput.value = "";
